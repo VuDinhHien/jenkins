@@ -24,6 +24,7 @@ func main() {
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})
+
 	app.Static("/", "./public")
 	// Kết nối cơ sở dữ liệu MySQL
 	dsn := "root@tcp(127.0.0.1:3306)/fiber_demo?charset=utf8mb4&parseTime=True&loc=Local"
@@ -41,7 +42,7 @@ func main() {
 
 	// GET /login
 	app.Get("/login", func(c *fiber.Ctx) error {
-		return c.Render("login", fiber.Map{})
+		return c.Render("pages/auth/login", fiber.Map{})
 	})
 
 	// POST /login
@@ -71,7 +72,7 @@ func main() {
 
 	// GET /register
 	app.Get("/register", func(c *fiber.Ctx) error {
-		return c.Render("register", fiber.Map{})
+		return c.Render("pages/auth/register", fiber.Map{})
 	})
 
 	// POST /register
@@ -122,7 +123,7 @@ func main() {
 		if err != nil {
 			return err
 		}
-		if sess.Get("username") == nil && c.Path() != "/login" && c.Path() != "/register" {
+		if sess.Get("username") == nil && c.Path() != "pages/auth/login" && c.Path() != "pages/auth/register" {
 			return c.Redirect("/login")
 		}
 		return c.Next()
@@ -135,7 +136,7 @@ func main() {
 			return err
 		}
 		username := sess.Get("username")
-		return c.Render("index", fiber.Map{
+		return c.Render("pages/auth/index", fiber.Map{
 			"Username": username,
 		})
 	})
